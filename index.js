@@ -2,9 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8000;
 
-app.use("/", (req, res) => {
-  res.send("<h1>RSocial api</h1>");
-});
+app.use("/", require("./routes/index"));
 
 app.listen(PORT, (err) => {
   err
