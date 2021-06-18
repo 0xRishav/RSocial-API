@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8000;
+const db = require("./config/mongoose");
 
 app.use("/", require("./routes/index"));
 
@@ -9,3 +10,5 @@ app.listen(PORT, (err) => {
     ? console.log(`Error in running server: ${err}`)
     : console.log(`Server is up and running on port: ${PORT}`);
 });
+
+module.exports = db;
