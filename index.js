@@ -1,7 +1,13 @@
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
 const PORT = 8000;
 const db = require("./config/mongoose");
+const { urlencoded } = require("express");
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/", require("./routes/index"));
 
