@@ -6,7 +6,7 @@ require("../models/comment");
 const StoryController = require("../controllers/story_controller");
 const UploadController = require("../controllers/upload_controller");
 const middlewares = require("../middlewares");
-const { multerUploads } = request("../config/multer");
+const { multerUploads } = require("../config/multer");
 
 const router = express.Router();
 const homeController = require("../controllers/home_controller");
