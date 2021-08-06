@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/rsocial_db");
+mongoose
+  .connect(process.env.MONGOOSE_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("mongoose connection successful"))
+  .catch((err) => console.log("mongoose connection failed", err));
 
 const db = mongoose.connection;
-
-db.on("error", console.error.bind("error connecting to db"));
-
-db.once("open", () => console.log("successfully connected to db"));
-
