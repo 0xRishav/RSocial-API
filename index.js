@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const app = express();
 const cookieParser = require("cookie-parser");
-const PORT = 8000;
+const PORT = 8000 || process.env.PORT;
 const db = require("./config/mongoose");
 const { cloudinaryConfig } = require("./config/cloudinary");
 const { urlencoded } = require("express");
