@@ -14,10 +14,13 @@ module.exports.createComment = async (req, res) => {
     const post = await Post.findById(postId);
     post.comments.push(commentDoc._id);
     post.save();
-    const newPost = await Post.findById(postId).populate({
-      path: "comments",
-      populate: { path: "user" },
-    });
+    const newPost = await Post.findById(postId)
+      .populate("user")
+      .populate({
+        path: "comments",
+        populate: { path: "user" },
+      })
+      .populate({ path: "likes", populate: { path: "user" } });
     const comments = await Comment.find({ post: postId }).populate("user");
     return res.status(200).json({ data: { comments, newPost } });
   } catch (err) {

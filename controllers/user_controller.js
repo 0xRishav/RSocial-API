@@ -6,9 +6,10 @@ const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 module.exports.signUp = async (req, res) => {
-  const { name, email, username, password, confirmPassword } = req.body;
+  const { name, email, username, password, confirmPassword, bio } = req.body;
   let user = null;
   if (password !== confirmPassword) {
+    console.log("hey");
     return res
       .status(401)
       .json({ success: false, message: "Password does not match" });
@@ -32,6 +33,7 @@ module.exports.signUp = async (req, res) => {
         email: email,
         name: name,
         password: hashedPassword,
+        bio: bio,
         username: username,
       };
       user = await new User(userObj).save();
@@ -44,7 +46,7 @@ module.exports.signUp = async (req, res) => {
         data: {
           accessToken: accessToken,
           refreshToken: refreshToken,
-          userId: user._id,
+          user: user,
         },
       });
     } else {
@@ -70,11 +72,13 @@ module.exports.logIn = async (req, res) => {
   try {
     user = email
       ? await User.findOne({ email: email })
+          .populate("posts")
           .populate("followers")
           .populate("following")
       : await User.findOne({ username: username })
           .populate("followers")
-          .populate("following");
+          .populate("following")
+          .populate("posts");
     if (user) {
       if (bcrypt.compare(password, user.password)) {
         const accessToken = await user.createAccessToken();
@@ -108,6 +112,37 @@ module.exports.fetchAllUsers = async (req, res) => {
       const allUsers = await User.find({});
       if (allUsers) {
         return res.status(200).json({ data: { allUsers } });
+      }
+    } else {
+      return res.status(422).json({
+        message: "Access not granted",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error Please try Again Later.",
+    });
+  }
+};
+
+module.exports.fetchParticularUser = async (req, res) => {
+  const { userId } = req.params;
+  const { user } = req;
+  try {
+    if (user) {
+      if (userId) {
+        const user = await User.findById(userId)
+          .populate("followers")
+          .populate("following")
+          .populate("posts");
+        if (user) {
+          return res.status(200).json({ data: { user } });
+        }
+      } else {
+        return res.status(403).json({
+          message: "invalid userId",
+        });
       }
     } else {
       return res.status(422).json({

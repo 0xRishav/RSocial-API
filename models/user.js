@@ -17,6 +17,10 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
+    bio: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -54,6 +58,12 @@ const UserSchema = new Schema(
         ref: "User",
       },
     ],
+    posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -64,9 +74,7 @@ UserSchema.methods = {
   createAccessToken: async function () {
     try {
       let user = this;
-      let accessToken = jwt.sign({ id: user._id }, ACCESS_TOKEN_SECRET, {
-        expiresIn: "1d",
-      });
+      let accessToken = jwt.sign({ id: user._id }, ACCESS_TOKEN_SECRET);
       return accessToken;
     } catch (err) {
       console.log(err);
@@ -76,9 +84,7 @@ UserSchema.methods = {
   createRefreshToken: async function () {
     try {
       const user = this;
-      let refreshToken = jwt.sign({ id: user._id }, REFRESH_TOKEN_SECRET, {
-        expiresIn: "30d",
-      });
+      let refreshToken = jwt.sign({ id: user._id }, REFRESH_TOKEN_SECRET);
       await new TokenDb({ token: refreshToken }).save();
       return refreshToken;
     } catch (err) {

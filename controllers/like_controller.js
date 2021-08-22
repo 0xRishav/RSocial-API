@@ -3,7 +3,8 @@ const Comment = require("../models/comment");
 const Post = require("../models/post");
 
 module.exports.toggleLike = async (req, res) => {
-  const { likeableId, type } = req.query;
+  let post;
+  const { likeableId, type } = req.body;
   console.log("TYPE", type, likeableId);
   const { user } = req;
   let deleted = false;
@@ -26,23 +27,39 @@ module.exports.toggleLike = async (req, res) => {
     // Delete if exists
 
     if (existingLike) {
-      likeable.likes.pull(existingLike._id);
-      likeable.save();
-      existingLike.remove();
+      await likeable.likes.pull(existingLike._id);
+      await likeable.save();
+      await existingLike.remove();
       deleted = true;
+      post = await Post.findById(likeableId)
+        .populate("user")
+        .populate({
+          path: "comments",
+          populate: { path: "user" },
+        })
+        .populate({ path: "likes", populate: { path: "user" } });
     } else {
       let newLike = await Like.create({
         user: user._id,
         likeable: likeableId,
         onModel: type,
       });
-      likeable.likes.push(newLike._id);
-      likeable.save();
+      await likeable.likes.push(newLike._id);
+      await likeable.save();
+      post = await Post.findById(likeableId)
+        .populate("user")
+        .populate({
+          path: "comments",
+          populate: { path: "user" },
+        })
+        .populate({ path: "likes", populate: { path: "user" } });
     }
     return res.status(200).json({
       message: "Request Successfull",
       data: {
         deleted: deleted,
+        isPostLiked: !deleted,
+        post: post,
       },
     });
   } catch (err) {

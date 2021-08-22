@@ -7,7 +7,8 @@ const { dataUri } = require("../config/multer");
 const parser = new DatauriParser();
 
 module.exports.uploadCoverPhoto = async (req, res) => {
-  const { user } = req;
+  const user = req.user;
+  console.log("User", user);
   try {
     if (user) {
       if (req.file) {
@@ -34,7 +35,8 @@ module.exports.uploadCoverPhoto = async (req, res) => {
 };
 
 module.exports.uploadProfilePhoto = async (req, res) => {
-  let { user } = req;
+  const user = req.user;
+  console.log("User", user);
   try {
     if (user) {
       if (req.file) {
@@ -84,6 +86,7 @@ module.exports.uploadPostPhoto = async (req, res) => {
 
 module.exports.createStory = async (req, res) => {
   const user = req.user;
+  console.log(req.file);
   try {
     if (user) {
       if (req.file) {
@@ -96,8 +99,10 @@ module.exports.createStory = async (req, res) => {
           photoPublicId: public_id,
         }).save();
 
+        console.log("STORY", story);
         return res.status(200).json({
           message: "Story created successfully",
+          data: { story },
         });
       }
     } else {

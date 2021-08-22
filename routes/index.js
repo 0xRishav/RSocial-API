@@ -15,8 +15,9 @@ router.get("/", homeController.home);
 router.use("/user", require("./user"));
 router.use("/post", require("./post"));
 router.use("/comment", require("./comment"));
+router.use("/story", require("./story"));
 
-router.get("/stories", middlewares.checkAuth, StoryController.fetchAllStories);
+
 
 router.get(
   "/stories/create",

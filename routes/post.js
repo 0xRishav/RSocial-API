@@ -9,6 +9,15 @@ const UploadController = require("../controllers/upload_controller");
 const LikeController = require("../controllers/like_controller");
 
 const middlewares = require("../middlewares");
+const CommentController = require("../controllers/comment_controller");
+
+router.post(
+  "/create-comment",
+  middlewares.checkAuth,
+  CommentController.createComment
+);
+
+router.post("/fetch-post", middlewares.checkAuth, PostController.fetchPost);
 
 router.post(
   "/upload-photo",
@@ -19,12 +28,11 @@ router.post(
 
 router.post("/create-post", middlewares.checkAuth, PostController.createPost);
 
-router.post(
-  "/get-user-post",
+router.get(
+  "/fetch-user-posts",
   middlewares.checkAuth,
   PostController.fetchUserPosts
 );
-
 router.get(
   "/fetch-all-posts",
   middlewares.checkAuth,
@@ -34,9 +42,9 @@ router.get(
 router.post("/delete-post", middlewares.checkAuth, PostController.deletePost);
 
 router.post(
-  "/fetch-post-comments",
+  "/create-comment",
   middlewares.checkAuth,
-  PostController.fetchPostComments
+  CommentController.createComment
 );
 
 router.post(
