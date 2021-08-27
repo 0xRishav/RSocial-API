@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose
-  .connect(process.env.MONGOOSE_URI, {
+  .connect("mongodb://localhost:27017/rsocial-demo", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -9,3 +9,6 @@ mongoose
   .catch((err) => console.log("mongoose connection failed", err));
 
 const db = mongoose.connection;
+
+// mongoose.connect('mongodb://localhost/myapp');
+// process.env.MONGOOSE_URI

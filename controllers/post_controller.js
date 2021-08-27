@@ -38,7 +38,7 @@ module.exports.fetchUserPosts = async (req, res) => {
 
 module.exports.fetchAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({}).populate("user");
+    const posts = await Post.find({}).populate("user").populate({ path: "likes", populate: { path: "user" } });
     return res.status(200).json({ data: { posts } });
   } catch (err) {
     console.log(err);
