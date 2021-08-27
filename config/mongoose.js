@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb://localhost:27017/rsocial-demo", {
+  .connect(process.env.MONGOOSE_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
