@@ -22,13 +22,11 @@ module.exports.createPost = async (req, res) => {
 
 module.exports.fetchUserPosts = async (req, res) => {
   const { user } = req;
-  console.log(user._id);
   try {
     const posts = await Post.find({ user: user._id })
       .populate({ path: "likes", populate: { path: "user" } })
       .populate({ path: "comments", populate: { path: "user" } });
 
-    console.log(posts);
     return res.status(200).json({ data: { posts } });
   } catch (err) {
     console.log(err);
@@ -49,11 +47,11 @@ module.exports.fetchAllPosts = async (req, res) => {
 };
 module.exports.deletePost = async (req, res) => {
   const { postId } = req.body;
-  const { user } = req;
+  const user = req.user;
   try {
-    const post = await Post.find({ _id: postId });
+    const post = await Post.findById(postId);
     if (post.user === user._id) {
-      await Post.findByIdAndDelete(postId);
+      // await Post.deleteOne({ _id: postId });
       return res.status(200).json({ message: "Post deleted successfully" });
     } else {
       return res

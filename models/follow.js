@@ -4,8 +4,8 @@ const { Schema } = mongoose;
 
 const FollowSchema = new Schema(
   {
-    follower: { type: Schema.Types.ObjectId, required: true },
-    following: { type: Schema.Types.ObjectId, required: true },
+    follower: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    following: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   {
     timestamps: true,
@@ -14,4 +14,4 @@ const FollowSchema = new Schema(
 
 const Follow = mongoose.model("Follow", FollowSchema);
 
-module.exports = FollowSchema;
+module.exports = Follow;

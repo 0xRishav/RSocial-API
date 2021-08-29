@@ -9,7 +9,6 @@ module.exports.signUp = async (req, res) => {
   const { name, email, username, password, confirmPassword, bio } = req.body;
   let user = null;
   if (password !== confirmPassword) {
-    console.log("hey");
     return res
       .status(401)
       .json({ success: false, message: "Password does not match" });
@@ -71,13 +70,12 @@ module.exports.logIn = async (req, res) => {
   let user = null;
   try {
     user = email
-      ? await User.findOne({ email: email })
-          .populate("posts")
-          .populate("followers")
-          .populate("following")
-      : await User.findOne({ username: username })
-          .populate("followers")
-          .populate("following")
+      ? await User.findOne({ email: email }).populate("posts")
+      : // .populate("followers")
+        // .populate("following")
+        await User.findOne({ username: username })
+          // .populate("followers")
+          // .populate("following")
           .populate("posts");
     if (user) {
       if (bcrypt.compare(password, user.password)) {
@@ -133,8 +131,8 @@ module.exports.fetchParticularUser = async (req, res) => {
     if (user) {
       if (userId) {
         const user = await User.findById(userId)
-          .populate("followers")
-          .populate("following")
+          // .populate("followers")
+          // .populate("following")
           .populate("posts");
         if (user) {
           return res.status(200).json({ data: { user } });
