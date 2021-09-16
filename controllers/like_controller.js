@@ -5,7 +5,6 @@ const Post = require("../models/post");
 module.exports.toggleLike = async (req, res) => {
   let post;
   const { likeableId, type } = req.body;
-  console.log("TYPE", type, likeableId);
   const { user } = req;
   let deleted = false;
   let likeable;

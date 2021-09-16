@@ -9,3 +9,6 @@ mongoose
   .catch((err) => console.log("mongoose connection failed", err));
 
 const db = mongoose.connection;
+
+// mongoose.connect('mongodb://localhost/myapp');
+// process.env.MONGOOSE_URI

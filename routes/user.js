@@ -44,10 +44,6 @@ router.post(
   FollowController.removeFollower
 );
 
-router.post(
-  "/remove-following",
-  middlewares.checkAuth,
-  FollowController.removeFollowing
-);
+router.post("/unfollow", middlewares.checkAuth, FollowController.unfollow);
 
 module.exports = router;

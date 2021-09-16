@@ -1,12 +1,15 @@
+const User = require("../models/user");
+
 module.exports.Follow = async (req, res) => {
   const { userIdToFollow } = req.body;
-  const { user } = body;
+  const { user } = req;
   try {
-    user.following.push(userIdToFollow);
+    user.followings.push(userIdToFollow);
     await user.save();
+    const newUser = await User.findById(user._id).populate("posts");
     return res.status(200).json({
       message: "Followed successfully",
-      data: { user },
+      data: { newUser },
     });
   } catch (err) {
     console.log(err);
@@ -16,17 +19,19 @@ module.exports.Follow = async (req, res) => {
   }
 };
 
-module.exports.removeFollowing = async (req, res) => {
-  const { userIdToRemove } = req.body;
-  const { user } = body;
+module.exports.unfollow = async (req, res) => {
+  const { userIdToUnfollow } = req.body;
+  const { user } = req;
   try {
-    const index = user.followings.indexOf(userIdToRemove);
-    user.following.splice(index, 1);
+    const index = user.followings.indexOf(userIdToUnfollow);
+    user.followings.splice(index, 1);
     await user.save();
 
+    const newUser = await User.findById(user._id).populate("posts");
+
     return res.status(200).json({
-      message: "Follow deleted successfully",
-      data: { user },
+      message: "Unfollowed successfully",
+      data: { newUser },
     });
   } catch (err) {
     console.log(err);
